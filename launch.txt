@@ -1,0 +1,4 @@
+simple use case # docker run --rm perl:5.38 perl --version
+with platform # docker run --rm --platform=linux/x86_64 perl:5.38 perl --version
+💥 two commands # docker run --rm --platform=linux/x86_64 perl:5.38 perl --version && perl --version
+✅ two commands (fixed ) # docker run --rm perl:5.38 bash -c "perl --version && perl --version"
