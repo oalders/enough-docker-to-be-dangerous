@@ -1,0 +1,9 @@
+FROM perl:5.38
+
+RUN cpm install -g Crypt::XkcdPassword
+
+RUN mkdir app
+
+COPY pw.pl /app/
+
+ENTRYPOINT ["./app/pw.pl"]
