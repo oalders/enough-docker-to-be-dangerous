@@ -1,4 +1,13 @@
-simple use case # docker run --rm perl:5.38 perl --version
-with platform # docker run --rm --platform=linux/x86_64 perl:5.38 perl --version
-💥 two commands # docker run --rm --platform=linux/x86_64 perl:5.38 perl --version && perl --version
-✅ two commands (fixed ) # docker run --rm perl:5.38 bash -c "perl --version && perl --version"
+🐪 Simple use case # docker run --rm perl:5.38 perl --version
+🐪🐪 Simple use case with platform # docker run --rm --platform=linux/x86_64 perl:5.38 perl --version
+💥 Two commands # docker run --rm --platform=linux/x86_64 perl:5.38 perl --version && perl --version
+✅ Two commands (fixed ) # docker run --rm perl:5.38 bash -c "perl --version && perl --version"
+➕ Adding logic to your commands # docker run --rm perl:5.38 bash -c "cpm install -g Crypt::XkcdPassword && perl -MCrypt::XkcdPassword -E 'say Crypt::XkcdPassword->make_password'"
+👟 Running the script # cd app && docker run --rm -v "$PWD:/usr/src/app" perl:5.38 bash -c "cpm install -g Crypt::XkcdPassword && ./pw.pl" && cd -
+🔨 Building your own image # cd app && docker build -t xkcd-pw . && cd -
+👟 Running a container based on our image # cd app && docker run --rm -v "$PWD:/usr/src/app" xkcd-pw ./pw.pl && cd -
+👋 Running from inside the container # cd app && docker run --rm -v "$PWD:/usr/src/app" -w /usr/src/app -it xkcd-pw bash && cd -
+🔨 Building your own entrypoint image # cd app && docker build -f entrypoint-Dockerfile -t pw . && cd -
+👟 Running our own entrypoint image # cd app && docker run pw && cd -
+🤔 Peeking inside an entrypoint container # docker run --rm -it pw bash
+💡 Overriding an ENTRYPOINT # docker run --rm -it --entrypoint bash pw

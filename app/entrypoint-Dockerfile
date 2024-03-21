@@ -2,8 +2,8 @@ FROM perl:5.38
 
 RUN cpm install -g Crypt::XkcdPassword
 
-RUN mkdir app
+RUN mkdir /my-entrypoint
 
-COPY pw.pl /app/
+COPY pw.pl /my-entrypoint/
 
-ENTRYPOINT ["./app/pw.pl"]
+ENTRYPOINT ["/my-entrypoint/pw.pl"]

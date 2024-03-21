@@ -143,16 +143,15 @@ print color('reset');
 
 ```text
 docker run --rm                                    \
-    -v "$PWD:/app"                                 \
+    -v "$PWD:/usr/src/app"                         \
     perl:5.38                                      \
     bash -c "cpm install -g Crypt::XkcdPassword && \
-    ./app/pw.pl"
+    ./pw.pl"
 ```
 
 ---
 
 ### Building your own images 🔨
-
 
 `Dockerfile`:
 
@@ -169,10 +168,11 @@ RUN cpm install -g Crypt::XkcdPassword
 ```text
 docker build -t xkcd-pw .
 ```
+
  ---
 
 ```text
-docker run --rm -v "$PWD:/app" xkcd-pw ./app/pw.pl
+docker run --rm -v "$PWD:/usr/src/app" xkcd-pw ./pw.pl
 ```
 
 ---
@@ -180,7 +180,7 @@ docker run --rm -v "$PWD:/app" xkcd-pw ./app/pw.pl
 ### Running from inside a container 👋
 
 ```text
-docker run --rm -it -v "$PWD:/app" xkcd-pw bash
+docker run --rm -it -v "$PWD:/usr/src/app" xkcd-pw bash
 ```
 
 ---
@@ -194,7 +194,8 @@ You will often see `-i -t` written as `-it`
 
 Note:
 
-* When you see `tty`, think `terminal`. That word has a lot of history that is interesting to research, but beyond the scope of what we're covering here.
+* When you see `tty`, think `terminal`. That word has a lot of history that is
+  interesting to research, but beyond the scope of what we're covering here.
 
 ---
 
@@ -211,11 +212,11 @@ FROM perl:5.38
 
 RUN cpm install -g Crypt::XkcdPassword
 
-RUN mkdir app
+RUN mkdir /my-entrypoint
 
-COPY pw.pl /app/
+COPY pw.pl /my-entrypoint/
 
-ENTRYPOINT ["./app/pw.pl"]
+ENTRYPOINT ["/my-entrypoint/pw.pl"]
 ```
 
  ---
@@ -339,7 +340,7 @@ Note:
  docker run --rm -it     \
   -p 3000:3000           \
   -v $PWD:/sandbox       \
-  ruby:3.2.0-bullseye bash 
+  ruby:3.2.0-bullseye bash
 ```
 
 * `-p` / `--publish`
