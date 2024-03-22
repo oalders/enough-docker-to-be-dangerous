@@ -2,13 +2,13 @@
 
 Olaf Alders
 
-Toronto(ish), July 2023
+Toronto(ish), March 2024
 
 Note:
 
 ---
 
-## What is Docker? 📚
+## 📚 What is Docker?
 
 Note:
 
@@ -20,7 +20,7 @@ Note:
 
 ---
 
-## What is a container? 📦
+## 📦 What is a container?
 
 Note:
 
@@ -31,7 +31,7 @@ Note:
 
 ---
 
-## A simple use case 🐪
+## 🐪 A simple use case
 
 ```text
 $ docker run --rm perl:5.38 perl --version
@@ -39,7 +39,7 @@ $ docker run --rm perl:5.38 perl --version
 This is perl 5, version 38, subversion 0 (v5.38.0) built for aarch64-linux-gnu
 ```
 
-This uses an official image from https://hub.docker.com/_/perl
+This uses an official image from <https://hub.docker.com/_/perl>
 
 Note:
 
@@ -52,7 +52,7 @@ Note:
 
 ---
 
-## Simple (continued) 🐫
+## 🐫 Simple (continued)
 
 If you get warnings about your platform, you can fix it up by specifying
 a platform.
@@ -76,7 +76,7 @@ Note:
 
 ---
 
-## Running two commands 💥
+## 💥 Running two commands
 
 ```text
 docker run --rm --platform=linux/x86_64 perl:5.38 \
@@ -89,7 +89,7 @@ Note:
 
 ---
 
-## Running two commands ✅
+## ✅ Running two commands
 
 ```text
 $ docker run --rm perl:5.38 \
@@ -102,7 +102,7 @@ Note:
 
 ---
 
-## Adding logic to your commands ➕
+## ➕ Adding logic to your commands
 
 ```text
 docker run --rm perl:5.38 bash -c \
@@ -120,7 +120,7 @@ Note:
 
 ---
 
-### Moving logic into a script 🚚
+### 🚚 Moving logic into a script
 
 <!-- :read slides/8-intro-to-docker/app/pw.pl -->
 
@@ -139,7 +139,7 @@ print color('reset');
 
 ---
 
-### Running the script 👟
+### 👟 Running the script
 
 ```text
 docker run --rm                                    \
@@ -151,7 +151,7 @@ docker run --rm                                    \
 
 ---
 
-### Building your own images 🔨
+### 🔨 Building your own images
 
 `Dockerfile`:
 
@@ -177,7 +177,7 @@ docker run --rm -v "$PWD:/usr/src/app" xkcd-pw ./pw.pl
 
 ---
 
-### Running from inside a container 👋
+### 👋 Running from inside a container
 
 ```text
 docker run --rm -it -v "$PWD:/usr/src/app" xkcd-pw bash
@@ -185,7 +185,7 @@ docker run --rm -it -v "$PWD:/usr/src/app" xkcd-pw bash
 
 ---
 
-### `docker run -it` 🏃‍♀️
+### 🏃‍♀️ `docker run -it`
 
 * `-i`              : Keep STDIN open even if not attached
 * `-t`              : Allocate a pseudo-tty
@@ -199,7 +199,7 @@ Note:
 
 ---
 
-### Building your own entrypoint images 🔨
+### 🔨 Building your own entrypoint images
 
 `entrypoint-Dockerfile`
 
@@ -227,7 +227,7 @@ docker build -f entrypoint-Dockerfile -t pw .
 
 ---
 
-### Easy incantation 🧙
+### 🧙 Easy incantation
 
 ```text
 docker run pw
@@ -235,7 +235,7 @@ docker run pw
 
 ---
 
-### Peeking inside an entrypoint container 🤔
+### 🤔 Peeking inside an entrypoint container
 
 ```text
 docker run --rm -it pw bash
@@ -243,7 +243,7 @@ docker run --rm -it pw bash
 
 ---
 
-### Overriding an ENTRYPOINT 💡
+### 💡 Overriding an ENTRYPOINT
 
 ```text
 docker run --rm -it --entrypoint bash pw
@@ -251,7 +251,7 @@ docker run --rm -it --entrypoint bash pw
 
 ---
 
-### Less is more 📈
+### 📈 Less is more
 
  <!-- :read slides/8-intro-to-docker/app/Dockerfile  -->
 
@@ -260,34 +260,34 @@ FROM perl:5.38
 
 RUN cpm install -g Crypt::XkcdPassword
 
-RUN mkdir app
+RUN mkdir /app
 
 COPY pw.pl /app/
 
-ENTRYPOINT ["./app/pw.pl"]
+ENTRYPOINT ["/app/pw.pl"]
 ```
 
 ---
 
-### Oops 😰
+### 😰 Oops
 
-```
+```text
 Multiple consecutive `RUN` instructions. Consider consolidation
 ```
 
 ```Dockerfile
 FROM perl:5.38
 
-RUN cpm install -g Crypt::XkcdPassword && mkdir app
+RUN cpm install -g Crypt::XkcdPassword && mkdir /app
 
 COPY pw.pl /app/
 
-ENTRYPOINT ["./app/pw.pl"]
+ENTRYPOINT ["/app/pw.pl"]
 ```
 
 ---
 
-### Peeking inside an arbitrary container 👀
+### 👀 Peeking inside an arbitrary container
 
 ```text
 docker run --rm -it golang:latest bash
@@ -316,11 +316,12 @@ Note:
 
 ---
 
-### Unzipping untrusted files 🤐
+### 🤐 Unzipping untrusted files
 
 ```text
 docker run --rm -it -v $PWD:/app ruby:3.2.0-bullseye bash
 ```
+
  ---
 
 ```bash
@@ -334,7 +335,7 @@ Note:
 
 ---
 
-### Deploying an application 😅
+### 😅 Deploying an application
 
 ```text
  docker run --rm -it     \
@@ -352,7 +353,7 @@ Note:
 
 ---
 
-### List running containers 🏃📦
+### 🏃📦 List running containers
 
 ```text
 $ docker ps
@@ -362,7 +363,7 @@ CONTAINER ID   IMAGE           COMMAND   CREATED         STATUS         PORTS   
 
 ---
 
-### Attach to a running container by id ➕
+### ➕ Attach to a running container by id
 
 ```text
 $ docker exec -it 66669b11657d bash
@@ -371,7 +372,7 @@ root@66669b11657d:/go#
 
 ---
 
-### Attach to a running container by name 📛
+### 📛 Attach to a running container by name
 
 ```text
 $ docker exec -it goofy_kepler bash
@@ -380,7 +381,7 @@ root@66669b11657d:/go#
 
 ---
 
-### Stop a running container by id 🛑 9️⃣
+### 🛑 Stop a running container by id
 
 ```text
 docker stop 66669b11657d
@@ -388,7 +389,7 @@ docker stop 66669b11657d
 
 ---
 
-### Stop a running container by name 🛑 📛
+### 🛑 📛 Stop a running container by name
 
 ```text
 docker stop goofy_kepler
@@ -396,7 +397,7 @@ docker stop goofy_kepler
 
 ---
 
-### Use cases for Docker (testing) 🧪
+### 🧪 Use cases for Docker (testing)
 
 * Testing behaviour under a specific OS
 * Testing behaviour under specific software versions
@@ -411,9 +412,9 @@ docker stop goofy_kepler
 
 ---
 
-### Use cases for Docker (tooling) 🧰
+### 🧰 Use cases for Docker (tooling)
 
-https://github.com/oalders/geoip2-csv2pg
+<https://github.com/oalders/geoip2-csv2pg>
 
 * Download GeoIP2 CSV files and import them into a Pg database
   * You don't need `curl` installed locally
@@ -422,7 +423,7 @@ https://github.com/oalders/geoip2-csv2pg
 
 ---
 
-### Use cases for Docker (applications) 💼
+### 💼 Use cases for Docker (applications)
 
 `moov/watchman`
 
@@ -430,25 +431,25 @@ https://github.com/oalders/geoip2-csv2pg
 * Immediate microservice, deployed locally
 
 ```text
-$ docker run -p 8084:8084 -p 9094:9094 moov/watchman:latest
+docker run -p 8084:8084 -p 9094:9094 moov/watchman:latest
 ```
 
 In another terminal:
 
 ```text
-$ curl "localhost:8084/ofac/companies/13374"
+curl "localhost:8084/ofac/companies/13374"
 ```
 
 ---
 
-### Advantages of Docker 🥳
+### 🥳 Advantages of Docker
 
 * If well configured, you don't have to install many (or any) dependencies
 * If filing a bug ticket, you can include a Docker incantation to reproduce the bug
 
 ---
 
-#### Debugging an application 🐞
+#### 🐞 Debugging an application
 
 ```text
 $ gh repo clone houseabsolute/precious
@@ -460,21 +461,21 @@ rustc 1.71.0 (8ede3aae2 2023-07-12)
 root@053303aac27e:/# cd precious && cargo test
  ```
 
- Note:
+Note:
 
- * Now you have a Rust development environment without having to configure it locally
+* Now you have a Rust development environment without having to configure it locally
 
 ---
 
-#### Debugging Go + Bash 🐛
+#### 🐛 Debugging Go + Bash
 
 ##### Creating a Dockerfile
 
 ```text
 touch Dockerfile
 ```
- ---
 
+ ---
 
 ```Dockerfile
 FROM bash:5.2.15
@@ -484,6 +485,7 @@ COPY --from=golang:1.20-alpine /usr/local/go/ /usr/local/go/
 
 ENV PATH="/usr/local/go/bin:${PATH}"
 ```
+
  ---
 
 ```text
@@ -497,7 +499,7 @@ Note:
 
 ---
 
-#### Run the image with the app mounted 🏃
+#### 🏃 Run the image with the app mounted
 
 ```text
 $ gh repo clone JanDeDobbeleer/oh-my-posh
@@ -518,21 +520,21 @@ bash-5.2# go test ./...
 
 ---
 
-#### Docker: The Missing Bits 🔎
+#### 🔎 Docker: The Missing Bits
 
 * `docker run -d | --detach`
 * `docker compose`
 
 ---
 
-#### Docker: The production deployment 🚀
+#### 🚀 Docker: The production deployment
 
 * `docker swarm`
 * just use k8s or k3s
 
 ---
 
-#### In Summary 🏁
+#### 🏁 In Summary
 
 * Always `--rm` unless debugging a container after shutdown
 * Use `bash -c` if doing something requiring more than one statement
