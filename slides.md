@@ -425,19 +425,19 @@ docker stop goofy_kepler
 
 ### 💼 Use cases for Docker (applications)
 
-`moov/watchman`
+`metacpan/metacpan-web`
 
-* Golang application, which refreshes its own data
-* Immediate microservice, deployed locally
+* Perl application
+* Deployed locally -- ready to use
 
 ```text
-docker run -p 8084:8084 -p 9094:9094 moov/watchman:latest
+docker run --rm -it -p5001:5001 metacpan/metacpan-web
 ```
 
 In another terminal:
 
 ```text
-curl "localhost:8084/ofac/companies/13374"
+open http://0:5001
 ```
 
 ---

@@ -14,6 +14,6 @@
 👀 Peeking inside an arbitrary container # docker run --rm -it golang:latest bash
 🤐 Unzipping untrusted files # docker run --rm -it -v $PWD:/app ruby:3.2.0-bullseye bash
 🏃📦 List running containers # docker ps
-💼 watchman server # docker run -p 8084:8084 -p 9094:9094 moov/watchman:latest
-💼 💼 watchman request: # curl "localhost:8084/ofac/companies/13374"
+⭕ MetaCPAN Web # docker run --rm -it -p5001:5001 metacpan/metacpan-web
+🌍 MetaCPAN in Browser # open http://0:5001
 💍precious # docker run -it --rm -v $PWD:/precious rust:slim-buster bash
