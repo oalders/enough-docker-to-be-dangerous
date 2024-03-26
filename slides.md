@@ -1,4 +1,4 @@
-## Enough Docker to be Dangerous 🐳
+# Enough Docker to be Dangerous 🐳
 
 Olaf Alders
 
@@ -27,7 +27,7 @@ Note:
 * A Docker container image is a lightweight, standalone, executable package of
   software that includes everything needed to run an application: code,
   runtime, system tools, system libraries and settings
-* Docker container images become containers at runtime
+* Docker images become containers at runtime
 
 ---
 
@@ -48,7 +48,7 @@ Note:
   * Clean up when container exits. If you're not debugging your container,
     you'll generally want `--rm` in order to avoid filling your disk with the
     file systems of your old containers.
-* perl:5.36
+* perl:5.38
 
 ---
 
@@ -111,13 +111,6 @@ docker run --rm perl:5.38 bash -c \
     'say Crypt::XkcdPassword->make_password'"
 ```
 
-Note:
-
-* run
-* --rm
-* -it
-* perl:5.36
-
 ---
 
 ### 🚚 Moving logic into a script
@@ -136,6 +129,10 @@ print color('bold blue');
 say Crypt::XkcdPassword->make_password;
 print color('reset');
 ```
+
+Note:
+
+* `-v` is short for `--volume`
 
 ---
 
@@ -162,6 +159,10 @@ FROM perl:5.38
 
 RUN cpm install -g Crypt::XkcdPassword
 ```
+
+Note:
+
+* `-t` is short for `--tag`
 
  ---
 
@@ -212,14 +213,24 @@ FROM perl:5.38
 
 RUN cpm install -g Crypt::XkcdPassword
 
-RUN mkdir /my-entrypoint
+RUN mkdir /app
 
-COPY pw.pl /my-entrypoint/
+WORKDIR /app
 
-ENTRYPOINT ["/my-entrypoint/pw.pl"]
+COPY pw.pl .
+
+ENTRYPOINT ["/app/pw.pl"]
 ```
 
- ---
+Note:
+
+* `WORKDIR`
+  * sets the current working directory for the `COPY` command
+  * is the directory you will be in when you
+    * run the container
+    * attach to the container
+
+---
 
 ```text
 docker build -f entrypoint-Dockerfile -t pw .
@@ -262,7 +273,9 @@ RUN cpm install -g Crypt::XkcdPassword
 
 RUN mkdir /app
 
-COPY pw.pl /app/
+WORKDIR /app
+
+COPY pw.pl .
 
 ENTRYPOINT ["/app/pw.pl"]
 ```
@@ -280,10 +293,18 @@ FROM perl:5.38
 
 RUN cpm install -g Crypt::XkcdPassword && mkdir /app
 
-COPY pw.pl /app/
+WORKDIR /app
+
+COPY pw.pl .
 
 ENTRYPOINT ["/app/pw.pl"]
 ```
+
+Note:
+
+* Each `RUN` command creates a new layer. This can make your image bigger than
+  it needs to be.
+* Minimize your `RUN` commands to keep your image size down.
 
 ---
 
@@ -295,14 +316,14 @@ docker run --rm -it golang:latest bash
 
 ```text
 root@870239ac7387:/go# go version
-go version go1.19.5 linux/arm64
+go version go1.22.1 linux/amd64
 
 root@870239ac7387:/go# cat /etc/os-release
-PRETTY_NAME="Debian GNU/Linux 11 (bullseye)"
+PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
 NAME="Debian GNU/Linux"
-VERSION_ID="11"
-VERSION="11 (bullseye)"
-VERSION_CODENAME=bullseye
+VERSION_ID="12"
+VERSION="12 (bookworm)"
+VERSION_CODENAME=bookworm
 ID=debian
 HOME_URL="https://www.debian.org/"
 SUPPORT_URL="https://www.debian.org/support"
@@ -318,11 +339,21 @@ Note:
 
 ### 🤐 Unzipping untrusted files
 
+`untrusted.zip` is in our current directory
+
+
 ```text
 docker run --rm -it -v $PWD:/app ruby:3.2.0-bullseye bash
 ```
 
- ---
+Note:
+
+* Spin up a fresh container with a volume mount of our current directory, so
+  that zip file is available to the container
+
+---
+
+### 🚚 Move the File to a Directory which is not Shared with the Host
 
 ```bash
 mkdir /sandbox && cd /sandbox && unzip /app/untrusted.zip
@@ -332,6 +363,7 @@ Note:
 
 * This may not prevent every exploit, but it can be a lot cleaner than opening
   thousands of files into a directory on your filesystem.
+* You can install an editor into the container if you like
 
 ---
 
@@ -449,7 +481,7 @@ open http://0:5001
 
 ---
 
-#### 🐞 Debugging an application
+#### 🐞 Debugging a Rust Application
 
 ```text
 $ gh repo clone houseabsolute/precious
@@ -458,12 +490,15 @@ $ cd precious
 $ docker run -it --rm -v $PWD:/precious rust:slim-buster bash
 root@053303aac27e:/# rustc --version
 rustc 1.71.0 (8ede3aae2 2023-07-12)
-root@053303aac27e:/# cd precious && cargo test
+root@053303aac27e:/# cd precious && "do stuff"
  ```
 
 Note:
 
-* Now you have a Rust development environment without having to configure it locally
+* Now you have a Rust development environment without having to configure it
+  locally
+* I won't demonstrate it here because it takes far too long to download all of
+  the dependencies.
 
 ---
 
@@ -494,6 +529,7 @@ docker build -t bash-with-go .
 
 Note:
 
+* cd ./bash
 * Multi-stage build
 * Avoid multiple RUN statements
 
@@ -524,6 +560,11 @@ bash-5.2# go test ./...
 
 * `docker run -d | --detach`
 * `docker compose`
+
+Note:
+
+* Docker will start your container the same as before but this time will detach
+  from the container and return you to the terminal prompt.
 
 ---
 
