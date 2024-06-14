@@ -355,6 +355,8 @@ Note:
 
 ### 🚚 Move the File to a Directory which is not Shared with the Host
 
+ ---
+
 ```bash
 mkdir /sandbox && cd /sandbox && unzip /app/untrusted.zip
 ```
